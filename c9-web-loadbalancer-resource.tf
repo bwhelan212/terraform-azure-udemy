@@ -1,6 +1,6 @@
 # resource 1: create public ip for azure lb
 resource "azurerm_public_ip" "web_lb_publicip" {
-  name                = "${local.resource_name_prefix}-web-lb-publicip"
+  name                = "${local.resource_name_prefix}-web-lbpublicip"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   allocation_method   = "Static"
@@ -47,9 +47,10 @@ resource "azurerm_lb_rule" "web_lb_rule_app1" {
 }
 
 #resource 6: associate network interface and standard load balancer
-resource "azurerm_network_interface_backend_address_pool_association" "web_vmnic_lb_association" {
-  for_each                = var.web_linuxvm_instance_count
-  network_interface_id    = azurerm_network_interface.web_linuxvm_nic[each.key].id
-  ip_configuration_name   = azurerm_network_interface.web_linuxvm_nic[each.key].ip_configuration[0].name
-  backend_address_pool_id = azurerm_lb_backend_address_pool.web_lb_backend_pool.id
-}
+#comment out bc vmss uses backend address pool instead
+# resource "azurerm_network_interface_backend_address_pool_association" "web_vmnic_lb_association" {
+#   for_each                = var.web_linuxvm_instance_count
+#   network_interface_id    = azurerm_network_interface.web_linuxvm_nic[each.key].id
+#   ip_configuration_name   = azurerm_network_interface.web_linuxvm_nic[each.key].ip_configuration[0].name
+#   backend_address_pool_id = azurerm_lb_backend_address_pool.web_lb_backend_pool.id
+# }
