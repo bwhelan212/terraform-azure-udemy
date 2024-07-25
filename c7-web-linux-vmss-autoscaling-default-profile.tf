@@ -90,7 +90,7 @@
 #                 threshold = 1073741824 #increase 1 VM when memory in bytes less than 1 GB
 #             }
 #         }
-        
+
 #         #scale in
 #         rule {
 #             scale_action {
