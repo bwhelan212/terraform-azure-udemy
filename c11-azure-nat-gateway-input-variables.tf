@@ -1,0 +1,1 @@
+# input variables for nat gateway
