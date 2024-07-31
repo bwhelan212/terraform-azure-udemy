@@ -1,3 +1,4 @@
+# can manage outbound traffic with nat gateway
 # resource 1: create the public ip for azure nat gateway
 resource "azurerm_public_ip" "natgw_publicip" {
     name = "${local.resource_name_prefix}-natgw-pip"

@@ -1,4 +1,5 @@
 # updated vmss resource for internal lb implentation
+# downloads azure cli on vmss and the app1.conf
 locals {
 webvm_custom_data = <<CUSTOM_DATA
 #!/bin/sh
@@ -36,7 +37,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
   # computer_name_prefix = "vmss-app1" 
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  sku                 = "Standard_DS1_v2" # size of vm, could make a var
+  # sku                 = "Standard_DS1_v2" # size of vm, could make a var
+    sku                 = "Standard_B2s"
+
   instances           = 1
   admin_username      = "azureuser"
 

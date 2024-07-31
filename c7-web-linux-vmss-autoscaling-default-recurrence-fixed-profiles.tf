@@ -22,8 +22,8 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
 
     #capacity block
     capacity {
-      default = 2
-      minimum = 2
+      default = 1
+      minimum = 1
       maximum = 6
     }
 

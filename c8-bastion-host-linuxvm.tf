@@ -1,3 +1,18 @@
+#locals block for custom data (could also use variable)
+locals {
+  bastion_host_custom_data = <<CUSTOM_DATA
+#!/bin/sh
+#sudo yum update -y
+sudo yum install -y httpd
+sudo systemctl enable httpd
+sudo systemctl start httpd  
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+sudo yum install -y telnet
+sudo chmod -R 777 /var/www/html 
+sudo echo "Welcome to stacksimplify - Bastion Host - VM Hostname: $(hostname)" > /var/www/html/index.html
+CUSTOM_DATA  
+}
 # resource 1: create public ip address
 resource "azurerm_public_ip" "bastion_host_publicip" {
   name                = "${local.resource_name_prefix}-bastion-host-publicip"
@@ -43,5 +58,6 @@ resource "azurerm_linux_virtual_machine" "bastion_host_linuxvm" {
     sku       = "83-gen2"
     version   = "latest"
   }
-  #custom_data = filebase64("${path.module}/app-scripts/redhat-app1-script.sh")   
+  #custom_data = filebase64("${path.module}/app-scripts/redhat-app1-script.sh")
+  custom_data = base64encode(local.bastion_host_custom_data)
 }
