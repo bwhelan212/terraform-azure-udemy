@@ -1,9 +1,10 @@
+# use terraform_remote_state data source for ech project
 # Project-1: East US2 Datasource
 data "terraform_remote_state" "project1_eastus2" {
   backend = "azurerm"
   config = {
     resource_group_name   = "terraform-storage-rg"
-    storage_account_name  = "terraformstate201"
+    storage_account_name  = "terraformstate208"
     container_name        = "tfstatefiles"
     key                   = "project-1-eastus2-terraform.tfstate"
   }
@@ -14,15 +15,16 @@ data "terraform_remote_state" "project2_westus2" {
   backend = "azurerm"
   config = {
     resource_group_name   = "terraform-storage-rg"
-    storage_account_name  = "terraformstate201"
+    storage_account_name  = "terraformstate208"
     container_name        = "tfstatefiles"
     key                   = "project-2-westus2-terraform.tfstate"
   }
 }
 
 /* 
-1. Project-1: Web LB Public IP Address
+# to refence the ip ids (web_lb_public_ip_address_id from outputs)
+1. Project-1: Web LB Public IP Address ID
 data.terraform_remote_state.project1_eastus2.outputs.web_lb_public_ip_address_id
-1. Project-2: Web LB Public IP Address
+1. Project-2: Web LB Public IP Address ID
 data.terraform_remote_state.project2_westus2.outputs.web_lb_public_ip_address_id
 */
