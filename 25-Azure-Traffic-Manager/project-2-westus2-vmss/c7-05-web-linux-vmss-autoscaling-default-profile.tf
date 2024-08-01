@@ -25,13 +25,13 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
   location            = azurerm_resource_group.rg.location
   target_resource_id  = azurerm_linux_virtual_machine_scale_set.web_vmss.id
   # Notification  
-  notification {
-      email {
-        send_to_subscription_administrator    = true
-        send_to_subscription_co_administrator = true
-        custom_emails                         = ["myadminteam@ourorg.com"]
-      }
-    }    
+  # notification {
+  #     email {
+  #       send_to_subscription_administrator    = true
+  #       send_to_subscription_co_administrator = true
+  #       custom_emails                         = ["myadminteam@ourorg.com"]
+  #     }
+  #   }    
 ################################################################################
 ################################################################################
 #######################  Profile-1: Default Profile  ###########################
