@@ -49,26 +49,39 @@ resource "azurerm_storage_account" "storage_account" {
     error_404_document = var.static_website_error_404_document
   }
 }
-
-
-# Resource-2: httpd files Container
-resource "azurerm_storage_container" "httpd_files_container" {
-  name                  = "httpd-files-container"
-  storage_account_name  = azurerm_storage_account.storage_account.name
-  container_access_type = "private"
-}
-
-# Locals Block with list of files to be uploaded
+#locals block for static html files for azure app gateway
 locals {
-  httpd_conf_files = ["app1.conf"]
+  pages = ["index.html", "error.html", "502.html", "403.html"] #generic pages couold also use error_pages?
 }
-# Resource-3: httpd conf files upload to httpd-files-container
-resource "azurerm_storage_blob" "httpd_files_container_blob" {
-  for_each = toset(local.httpd_conf_files)
-  name                   = each.value
-  storage_account_name   = azurerm_storage_account.storage_account.name
-  storage_container_name = azurerm_storage_container.httpd_files_container.name
-  type                   = "Block"
-  source = "${path.module}/app-scripts/${each.value}"
-}
+#resource 2: add static html files to blob storage
+resource "azurerm_storage_blob" "static_container_blob" {
+  for_each = toset(local.pages) #from list to set
+  name = each.value
+  storage_account_name = azurerm_storage_account.storage_account.name
+  storage_container_name = "$web" #automatically created from static website block in azurerm_storage_account
+  type = "Block"
+  content_type = "text/html"
+  source = "${path.module}/custom_error_pages/${each.value}"
+} 
+
+# # Resource-2: httpd files Container
+# resource "azurerm_storage_container" "httpd_files_container" {
+#   name                  = "httpd-files-container"
+#   storage_account_name  = azurerm_storage_account.storage_account.name
+#   container_access_type = "private"
+# }
+
+# # Locals Block with list of files to be uploaded
+# locals {
+#   httpd_conf_files = ["app1.conf"]
+# }
+# # Resource-3: httpd conf files upload to httpd-files-container
+# resource "azurerm_storage_blob" "httpd_files_container_blob" {
+#   for_each = toset(local.httpd_conf_files)
+#   name                   = each.value
+#   storage_account_name   = azurerm_storage_account.storage_account.name
+#   storage_container_name = azurerm_storage_container.httpd_files_container.name
+#   type                   = "Block"
+#   source = "${path.module}/app-scripts/${each.value}"
+# }
 

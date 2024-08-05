@@ -16,7 +16,7 @@ resource "azurerm_network_security_group" "web_subnet_nsg" {
 
 #resource 3: associate nsg + subnet
 resource "azurerm_subnet_network_security_group_association" "web_subnet_nsg_association" {
-  depends_on                = [azurerm_network_security_rule.web_subnet_nsg_rule_inbound]
+  depends_on                = [azurerm_network_security_rule.web_subnet_nsg_rule_inbound] #nsg rule assocaition dissociates nsg from subnet and associate it so better to associate after NSG completly created (azure provider bug)
   subnet_id                 = azurerm_subnet.websubnet.id
   network_security_group_id = azurerm_network_security_group.web_subnet_nsg.id
 }
