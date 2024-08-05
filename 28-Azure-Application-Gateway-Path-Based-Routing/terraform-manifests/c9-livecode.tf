@@ -103,5 +103,66 @@ resource "azurerm_application_gateway" "web_ag" {
       status_code       = ["200"]
     }
   }   
-### live coding begins here
+  ### live coding begins here
+  #app 2 backend configs
+
+  backend_address_pool {
+    name = local.backend_address_pool_name_app2
+  }
+  backend_http_settings {
+    name                  = local.http_setting_name_app2
+    cookie_based_affinity = "Disabled"
+    port                  = 80
+    protocol              = "Http"
+    request_timeout       = 60
+    probe_name            = local.probe_name_app2
+  }
+  probe {
+    name                = local.probe_name_app2
+    host                = "127.0.0.1"
+    interval            = 30
+    timeout             = 30
+    unhealthy_threshold = 3
+    protocol            = "Http"
+    port                = 80
+    path                = "/app2/status.html"
+    match { # Optional
+      body              = "App2"
+      status_code       = ["200"]
+    }
+  }   
+
+  # path based routing  rule
+  request_routing_rule {
+    name = local.request_routing_rule1_name
+    rule_type = "PathBasedRouting"
+    http_listener_name = local.listener_name
+    url_path_map_name = local.url_path_map
+    priority = 140 # needed
+  }
+
+  #url path map - define path based routing
+  url_path_map {
+    name = local.url_path_map
+    default_redirect_configuration_name = local.redirect_configuration_name
+    path_rule {
+        name = "app1-rule"
+        paths = ["/app1/*"]
+        backend_address_pool_name = local.backend_address_pool_name_app1
+        backend_http_settings_name = local.http_setting_name_app1
+    }
+    path_rule {
+        name = "app2-rule"
+        paths = ["/app2/*"]
+        backend_address_pool_name = local.backend_address_pool_name_app2
+        backend_http_settings_name = local.http_setting_name_app2
+    }
+    
+  }
+  #default root context (/ - redirection config)
+  redirect_configuration {
+    name = local.redirect_configuration_name
+    redirect_type = "Permanent"
+    target_url = "http://www.google.com" # any target listener. can target different listener in same app gateway
+  }
 }
