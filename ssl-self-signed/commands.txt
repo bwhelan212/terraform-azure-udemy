@@ -1,0 +1,5 @@
+# to create a ssl cert (self signed) and private key. could also get CSR from cert authortity for production(commands might differ + not free)
+ssl-self-signed % openssl req -newkey rsa:2048 -nodes -keyout httpd.key -x509 -days 7300 -out httpd.crt
+
+# export to pfx file, need passsword for file. combines priv key and ssl cert
+openssl pkcs12 -export -out httpd.pfx -inkey httpd.key -in httpd.crt -passout pass:kalyan
